@@ -117,11 +117,11 @@ In order to contribute with a feature or User Story in the project you need to c
 branch name : your-name-feature-name
 ```
 
-Please read through our [Endpoint guidelines](https://github.com/Ogui99/Flow-backend/blob/dev/ENDPOINT.md). Included are directions for making an endpoint and notes on development.
+Please read through our [Endpoint guidelines](https://github.com/OmarBelguith/RBK-Platform-e-learning/blob/master/ENDPOINT.md). Included are directions for making an endpoint and notes on development.
 
-Please Read our coding style and contribution [guidelines](https://github.com/Ogui99/Flow-backend/blob/dev/GUIDELINES.md).
+Please Read our coding style and contribution [guidelines](https://github.com/OmarBelguith/RBK-Platform-e-learning/blob/master/GUIDELINES.md).
 
-Moreover, all Javascript should conform to the [Code Guide](https://github.com/Ogui99/Flow-backend/blob/dev/RULES.md), maintained by [standard](https://github.com/standard/standard).
+Moreover, all Javascript should conform to the [Code Guide](https://github.com/OmarBelguith/RBK-Platform-e-learning/blob/master/RULES.md), maintained by [standard](https://github.com/standard/standard).
 
 
 ## Thanks
