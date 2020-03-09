@@ -1,4 +1,6 @@
 module.exports = {
+
+    userServices:  require('./userSevices'),
 };
 
 // var router = require('express').Router();

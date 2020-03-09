@@ -20,7 +20,7 @@ app.use(require('./routes'));
 // app.use(require('./Services'))
 
 // Connecting to database
-mongoose.connect(process.env.MONGODB_URI || config.get(''), {
+mongoose.connect(process.env.MONGODB_URI || config.get('MONGODB_URI'), {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
