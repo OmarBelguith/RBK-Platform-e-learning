@@ -59,7 +59,7 @@ module.exports = {
     } catch (error) {
       //handle error
     }
-    userOperation.getUser(req.body);
+    await userOperation.getUser(req.body);
   },
 
   async addUser(req, res, next) {
@@ -134,6 +134,6 @@ module.exports = {
     } catch (error) {
       //handle error
     }
-    userOperation.updateUser(req.body, req.headers.authorization);
+    await userOperation.updateUser(req.body, req.headers.authorization);
   }
 };
