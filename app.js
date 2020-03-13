@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(require('./routes'));
+app.use(require('./services').ErrorMiddleware.ErrorMiddleware)
 // app.use(require('./Services'))
 
 // Connecting to database

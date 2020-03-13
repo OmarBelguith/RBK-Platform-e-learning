@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken')
 const config = require('config');
+
+
+
 module.exports = new class AuthJWT {
     constructor(){
     }
@@ -20,7 +23,8 @@ module.exports = new class AuthJWT {
         }
     }
     async generateToken(user) {
-        return jwt.sign({ userID: user._id}, process.env.SECRET || config.SECRET, {expiresIn: "1d"}); 
+        return jwt.sign({ userID: user._id,role:user.role}, process.env.SECRET || config.SECRET, {expiresIn: "1d"}); 
     }
+    
 
 }

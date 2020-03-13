@@ -12,7 +12,7 @@ router.patch('/updateprofile',[AuthUtils.AuthJWT.verifyToken,Multer.Multer.uploa
 //Get all user
 router.get('/getUser', AuthUtils.AuthJWT.verifyToken, UserController.getUser)
 //crate new user
-router.post('/addUser', AuthUtils.AuthJWT.verifyToken,Multer.Multer.upload, UserController.addUser)
+router.post('/addUser', [AuthUtils.AuthJWT.verifyToken,Multer.Multer.upload], UserController.addUser)
 // patch any user
 router.patch('/updateuser', AuthUtils.AuthJWT.verifyToken, UserController.updateUser)
 //register User
