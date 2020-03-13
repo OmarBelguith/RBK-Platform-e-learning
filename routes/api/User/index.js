@@ -1,30 +1,20 @@
 const router = require('express').Router();
-const authenticateJWT = require ('../../../middleware/authenticateJWT')
-var UserController = require('../../../controllers')
-const multer = require('multer')
-
-const storage = multer.diskStorage({
-    destination: function(req,file,cb) {
-        cb(null, './uploads')
-    },
-    filename:function(req,file,cb) {
-        cb(null, Date.now().toString() + file.originalname )
-    }
-})
-const upload = multer({storage : storage})
-// get user picture 
+const { AuthUtils , Multer } = require ('../../../services')
+const { UserController } = require('../../../controllers')
 
 //user Login
-router.post('/login', UserController.UserController.login)
+router.post('/login', UserController.login)
+//user dashboard 
+router.get('/dashboard',[AuthUtils.AuthJWT.verifyToken], UserController.dashboard)
 //user update profile
-router.patch('/updateprofile', UserController.UserController.updateProfile)
-//Get all user
-router.get('/getUser', authenticateJWT.authenticateJWT, UserController.UserController.getUser)
-//crate new user
+router.patch('/updateprofile',[AuthUtils.AuthJWT.verifyToken,Multer.Multer.upload],UserController.updateProfile);
 
-router.post('/addUser', authenticateJWT.authenticateJWT,upload.single('profilePhoto'), UserController.UserController.addUser)
+//Get all user
+router.get('/getUser', AuthUtils.AuthJWT.verifyToken, UserController.getUser)
+//crate new user
+router.post('/addUser', AuthUtils.AuthJWT.verifyToken,Multer.Multer.upload, UserController.addUser)
 // patch any user
-router.patch('/updateuser', authenticateJWT.authenticateJWT, UserController.UserController.updateUser)
+router.patch('/updateuser', AuthUtils.AuthJWT.verifyToken, UserController.updateUser)
 //register User
 //router.post('/user/post', UserController.addUsers)
 

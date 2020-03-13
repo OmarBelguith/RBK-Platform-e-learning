@@ -1,59 +1,31 @@
 const Operation = require('../operation');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs')
-const userService = require('../../services')
+const { UserServices, AuthUtils } = require('../../services')
 const config = require('config');
-const middleware = require('../../middleware/authenticateJWT')
 
 class UserOperation extends Operation {
 	constructor() {
 		super();
-		this.userService = userService;
+		this.userService = UserServices;
+		this.authUtils = AuthUtils;
+		
 	}
 
-	async login({
-		email,
-		password
-	}) {
-		const {
-			SUCCESS,
-			ERROR,
-			VALIDATION_ERROR,
-			NOT_FOUND
-		} = this.outputs;
+	async login({ email, password }) {
+		const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = this.outputs;
 		try {
-			const user = await this.userService.userServices.findOneUser({
-				email
-			})
-			if (!user)
-				return this.emit(SUCCESS, {
-					message: 'Email does not exist'
-				})
-
-			if (!(await bcrypt.compare(password, user.password)))
-				return this.emit(SUCCESS, {
-					message: 'Password is not correct'
-				})
-
-			const accessToken = jwt.sign({
-				userID: user._id
-			}, process.env.SECRET || config.SECRET, {
-				expiresIn: "1d"
-			});
-			await this.userService.userServices.updateUser({_id: user._id},{accessToken})
-			return this.emit(SUCCESS, {
-				accessToken,
-				firstname: user.firstname,
-				lastname: user.lastname,
-				email: user.email,
-				role: user.role,
-				photoName :user.photoName
-			})
-
+			const user = await this.userService.getUserByEmail(email)
+			if (!user) {
+				return this.emit(SUCCESS, { message: 'Email does not exist' })
+			}
+			const comparePassword = await this.authUtils.Bcryptjs.comparePassword(user.password, password);
+			if (!comparePassword) {
+				return this.emit(SUCCESS, { message: 'Incorrect Password' })
+			}
+			return this.emit(SUCCESS, { id: user._id, firstname: user.firstname, lastname: user.lastname, email: user.email, role: user.role, image: user.image, accessToken: await this.authUtils.AuthJWT.generateToken(user)})
 		} catch (error) {
 			console.log(error)
 			if (error.message === 'ValidationError') {
-				return this.emit(VALIDATION_ERROR, error);
+				return this.emit(VALIDATION_ERROR,error);
 			} else if (error.message === "NotFoundError") {
 				return this.emit(NOT_FOUND, error)
 			} else {
@@ -61,7 +33,22 @@ class UserOperation extends Operation {
 			}
 		}
 	}
-
+	async dashboard(req) {
+		const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = this.outputs;
+		try {
+			
+			return this.emit(SUCCESS, { req :req,content :"userContent"})
+		} catch (error) {
+			console.log(error)
+			if (error.message === 'ValidationError') {
+				return this.emit(VALIDATION_ERROR,error);
+			} else if (error.message === "NotFoundError") {
+				return this.emit(NOT_FOUND, error)
+			} else {
+				return this.emit(ERROR, error);
+			}
+		}
+	}
 	async getUser(query,token) {
 		const {
 			SUCCESS,
@@ -70,8 +57,6 @@ class UserOperation extends Operation {
 			NOT_FOUND
 		} = this.outputs;
 		try {
-			
-			
 			if(user.role === 'onboarder')
 			{
 			const users = await this.userService.userServices.getUsers(query)
@@ -128,22 +113,12 @@ class UserOperation extends Operation {
 			}
 		}
 	}
-	async updateProfile(data,token) {
-		const {
-			SUCCESS,
-			ERROR,
-			VALIDATION_ERROR,
-			NOT_FOUND
-		} = this.outputs;
+	async updateProfile(userData) {
+		const {SUCCESS,ERROR,VALIDATION_ERROR,NOT_FOUND} = this.outputs;
 		try {
-			const tokenget = token.split(' ')[1];
-			const user = await this.userService.userServices.findOneUser({accessToken : tokenget })
-			await this.userService.userServices.updateUser(user._id,data)
-			const updatedUser = await userService.userServices.findOneUser(user._id)
-			return this.emit(SUCCESS, {
-				updatedUser
-			})
-			
+			await this.userService.updateUser({_id: userData.id},userData)
+			const user = await this.userService.getUserById({_id: userData.id })
+			return this.emit(SUCCESS, { id: user._id, firstname: user.firstname, lastname: user.lastname, email: user.email, role: user.role, image: user.image})
 		} catch (error) {
 			console.log(error)
 			if (error.message === 'ValidationError') {
@@ -156,17 +131,10 @@ class UserOperation extends Operation {
 		}
 	}
 	async updateUser(data,token) {
-		const {
-			SUCCESS,
-			ERROR,
-			VALIDATION_ERROR,
-			NOT_FOUND
-		} = this.outputs;
+		const { SUCCESS,ERROR,VALIDATION_ERROR,NOT_FOUND } = this.outputs;
 		try {
-			
 			const tokenget = token.split(' ')[1];
 			const user = await this.userService.userServices.findOneUser({accessToken : tokenget })
-
 			if(user.role === 'onboarder')
 			{
 			await this.userService.userServices.updateUser(data._id,data)

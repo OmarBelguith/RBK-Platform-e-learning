@@ -29,12 +29,12 @@ mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection 
 mongoose.connection.once('open', console.info.bind(console, 'Connected to MongoDB'));
 
 // finally, let's start our server...
-const server = app.listen(process.env.PORT || 3000, function (req, res) {
+const server = app.listen(process.env.PORT || 3000,  (req, res)=> {
   console.log('Listening on port ' + server.address().port);
 });
 
-process.on('SIGINT', function () {
-  mongoose.connection.close(function () {
+process.on('SIGINT', () => {
+  mongoose.connection.close( () => {
     console.log('Mongoose disconnected on app termination');
     process.exit(0);
   });

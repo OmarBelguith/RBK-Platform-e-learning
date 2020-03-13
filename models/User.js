@@ -33,10 +33,7 @@ const userSchema = mongoose.Schema({
         default: new Date().toLocaleDateString(),
         required: true
     },
-    accessToken: {
-        type: String
-    },
-    photoName : {
+    image : {
         type: String,
         default: 'avatar.png'
     }
