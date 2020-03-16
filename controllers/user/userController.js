@@ -64,11 +64,6 @@ module.exports = {
 
   async addUser(req, res, next) {
     const userOperation = new UserOperation();
-    const userData = req;
-
-    if (req.file) {
-      userData.body.image = req.file.filename;
-    }
     const {
       SUCCESS,
       ERROR,
@@ -83,19 +78,13 @@ module.exports = {
         .on(ERROR, next)
         .on(VALIDATION_ERROR, next)
         .on(NOT_FOUND, next);
-      await userOperation.addUser(userData);
+      await userOperation.addUser(req.body, req.file);
     } catch (error) {
       //handle error
     }
   },
   async updateProfile(req, res, next) {
     const userOperation = new UserOperation();
-    const userData = req.body;
-    console.log(userData);
-
-    if (req.file) {
-      userData.image = req.file.filename;
-    }
     const {
       SUCCESS,
       ERROR,
@@ -110,7 +99,7 @@ module.exports = {
         .on(ERROR, next)
         .on(VALIDATION_ERROR, next)
         .on(NOT_FOUND, next);
-      await userOperation.updateProfile(userData);
+      await userOperation.updateProfile(req.body,req.user.userID,req.file);
     } catch (error) {
       //handle error
     }
@@ -134,6 +123,6 @@ module.exports = {
     } catch (error) {
       //handle error
     }
-    await userOperation.updateUser(req.body, req.headers.authorization);
+    await userOperation.updateUser(req.body,req.file);
   }
 };

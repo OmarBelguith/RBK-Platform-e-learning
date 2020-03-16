@@ -16,7 +16,6 @@ module.exports = new class Multer {
                 cb(null, false);
             }
         };
-        
         const upload = multer({
             storage: storage,
              limits: {
@@ -24,9 +23,6 @@ module.exports = new class Multer {
             },
             fileFilter: fileFilter
         });
-
        this.upload=upload.single('image')
-
     }
-    
 }

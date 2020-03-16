@@ -26,20 +26,18 @@ const userSchema = mongoose.Schema({
     role: {
         type: String,
         default: 'student',
-        enum: ["student", "instructor", "onboarder"]
+        enum: ['student', 'instructor', 'onboarder']
     },
     date: {
         type: Date,
-        default: new Date().toLocaleDateString(),
-        required: true
+        default: Date.now(),
+    
     },
     image : {
         type: String,
         default: 'avatar.png'
     }
 })
-
-
 
 const User = mongoose.model('User', userSchema)
 
