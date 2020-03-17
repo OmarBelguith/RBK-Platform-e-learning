@@ -1,9 +1,6 @@
 module.exports = {
+    UserServices :  require('./userSevices'),
+    AuthUtils : require('./authUtils'),
+    Multer : require('./multer'),
+    ErrorMiddleware : require('./errorMiddleware')
 };
-
-// var router = require('express').Router();
-
-// router.use('/exchangeService', require('./exchangeService/currencyLayerController'));
-// router.use('/exchangeService', require('./exchangeService/coinLayerController'));
-
-// module.exports = router;

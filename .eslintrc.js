@@ -1,3 +1,3 @@
-{
-  "extends": "eslint-config-semistandard"
+module.exports = {
+  "extends" : "eslint-config-semistandard"
 }
